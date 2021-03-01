@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  myjenkins_ssh:
+    container_name: myjenkins_ssh
+    image: jenkins/jenkins:lts
+    user: root
+    environment:
+      MY_NAME: "santi"
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks: 
+      - net_ssh
+  myremotehost:
+    container_name: myremotehost
+    build: 
+      context: centos
+    networks: 
+      - net_ssh
+
+
+# To use docker-volume (jenkins_home) instead of a directory path-file
+volumes:
+  jenkins_home:
+    name: "jenkins_home_ssh"
+
+# To create the "net_ssh" network for connecting both containers
+networks:
+  net_ssh:
+    name: "net_ssh"
